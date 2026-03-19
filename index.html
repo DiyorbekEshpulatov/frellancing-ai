@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreelanceAI — Avtomatlashtirilgan Freelance Platforma</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a24;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #f0f0f5;
+    --muted: #7a7a9a;
+    --accent: #6c63ff;
+    --accent2: #ff6584;
+    --accent3: #43e8a0;
+    --card: #13131e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  h1,h2,h3,.brand { font-family: 'Syne', sans-serif; }
+
+  /* NAV */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 2.5rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(16px);
+  }
+  .brand { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.03em; }
+  .brand span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: var(--accent); color: #fff; border: none;
+    padding: 0.5rem 1.2rem; border-radius: 8px; cursor: pointer;
+    font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.85rem;
+    transition: opacity 0.2s;
+  }
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 5rem 2rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(108,99,255,0.12) 0%, transparent 70%);
+    top: -100px; left: 50%; transform: translateX(-50%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(108,99,255,0.1); border: 1px solid rgba(108,99,255,0.3);
+    color: #a89fff; padding: 5px 14px; border-radius: 20px;
+    font-size: 0.8rem; margin-bottom: 1.5rem;
+  }
+  .hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent3); animation: blink 1.5s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .hero h1 { font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 1.2rem; }
+  .hero h1 .grad { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero p { color: var(--muted); font-size: 1.1rem; max-width: 520px; margin: 0 auto 2.5rem; line-height: 1.7; }
+  .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--accent); color: #fff; border: none;
+    padding: 0.75rem 2rem; border-radius: 10px; cursor: pointer;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 30px rgba(108,99,255,0.3);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(108,99,255,0.5); }
+  .btn-secondary {
+    background: transparent; color: var(--text); border: 1px solid var(--border2);
+    padding: 0.75rem 2rem; border-radius: 10px; cursor: pointer;
+    font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.95rem;
+    transition: background 0.2s;
+  }
+  .btn-secondary:hover { background: var(--bg3); }
+
+  /* STATS */
+  .stats {
+    display: flex; justify-content: center; gap: 3rem;
+    padding: 2rem; flex-wrap: wrap;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin: 0 2.5rem;
+  }
+  .stat { text-align: center; }
+  .stat-num { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--text); }
+  .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+
+  /* MAIN APP */
+  .app-section { padding: 4rem 2.5rem; max-width: 1100px; margin: 0 auto; }
+  .section-label { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 0.5rem; }
+  .section-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .section-sub { color: var(--muted); font-size: 0.95rem; margin-bottom: 2.5rem; }
+
+  /* AGENTS GRID */
+  .agents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 2.5rem;
+  }
+  .agent-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.2rem;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .agent-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent, rgba(108,99,255,0.04));
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .agent-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+  .agent-card:hover::before { opacity: 1; }
+  .agent-card.active { border-color: var(--accent); background: rgba(108,99,255,0.08); }
+  .agent-card.active::before { opacity: 1; }
+  .agent-emoji { font-size: 1.6rem; margin-bottom: 10px; }
+  .agent-name { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+  .agent-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+  .agent-tag {
+    display: inline-block; margin-top: 8px;
+    background: rgba(67,232,160,0.1); color: var(--accent3);
+    border: 1px solid rgba(67,232,160,0.2);
+    font-size: 0.7rem; padding: 2px 8px; border-radius: 6px;
+  }
+
+  /* WORKSPACE */
+  .workspace {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  @media(max-width: 700px) { .workspace { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .panel-header {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .panel-header-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .panel-title { font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; }
+  .panel-body { padding: 1.25rem; }
+
+  textarea.input-box {
+    width: 100%; min-height: 160px; resize: vertical;
+    background: var(--bg3); color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+    line-height: 1.6; transition: border-color 0.2s;
+    outline: none;
+  }
+  textarea.input-box:focus { border-color: var(--accent); }
+  textarea.input-box::placeholder { color: var(--muted); }
+
+  .options-row {
+    display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; align-items: center;
+  }
+  select.lang-select {
+    background: var(--bg3); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 6px 12px; font-size: 0.85rem;
+    font-family: 'DM Sans', sans-serif; cursor: pointer; outline: none;
+  }
+  .tone-btn {
+    background: var(--bg3); color: var(--muted);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 5px 12px; font-size: 0.78rem; cursor: pointer;
+    transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+  }
+  .tone-btn.active, .tone-btn:hover { background: rgba(108,99,255,0.15); color: var(--text); border-color: var(--accent); }
+
+  .run-btn {
+    width: 100%; margin-top: 1rem;
+    background: linear-gradient(135deg, var(--accent), #8b5cf6);
+    color: #fff; border: none; border-radius: 10px;
+    padding: 0.8rem; font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 0.95rem; cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .run-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+  .run-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* OUTPUT */
+  .output-area {
+    min-height: 260px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 0.88rem; line-height: 1.8;
+    color: var(--text);
+    white-space: pre-wrap;
+    overflow-y: auto;
+    max-height: 500px;
+  }
+  .output-placeholder { color: var(--muted); font-style: italic; }
+
+  .typing-indicator {
+    display: flex; gap: 5px; align-items: center; padding: 4px 0;
+  }
+  .typing-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent); opacity: 0.6;
+    animation: typing 1.2s infinite;
+  }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typing { 0%,80%,100%{transform:scale(0.7);opacity:0.4} 40%{transform:scale(1);opacity:1} }
+
+  .output-actions {
+    display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;
+  }
+  .action-btn {
+    background: var(--bg3); color: var(--muted);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 5px 14px; font-size: 0.8rem; cursor: pointer;
+    transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+  }
+  .action-btn:hover { color: var(--text); border-color: var(--border2); }
+
+  /* HISTORY */
+  .history-section { padding: 0 2.5rem 4rem; max-width: 1100px; margin: 0 auto; }
+  .history-list { display: flex; flex-direction: column; gap: 10px; }
+  .history-item {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1rem 1.25rem;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 1rem;
+  }
+  .history-item-left { flex: 1; min-width: 0; }
+  .history-agent-badge {
+    display: inline-block; font-size: 0.7rem; padding: 2px 10px;
+    border-radius: 6px; margin-bottom: 6px; font-weight: 600;
+  }
+  .history-query { font-size: 0.85rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .history-preview { font-size: 0.82rem; color: var(--text); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .history-time { font-size: 0.75rem; color: var(--muted); white-space: nowrap; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 2.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  footer .brand { font-size: 1rem; }
+  footer p { color: var(--muted); font-size: 0.8rem; }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: var(--bg3); border: 1px solid var(--border2);
+    color: var(--text); padding: 0.75rem 1.25rem;
+    border-radius: 10px; font-size: 0.85rem;
+    transform: translateY(100px); opacity: 0;
+    transition: all 0.3s; z-index: 999;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* API KEY MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 200; padding: 1rem;
+  }
+  .modal {
+    background: var(--bg2); border: 1px solid var(--border2);
+    border-radius: 20px; padding: 2rem; max-width: 460px; width: 100%;
+  }
+  .modal h2 { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .modal p { color: var(--muted); font-size: 0.88rem; margin-bottom: 1.5rem; line-height: 1.6; }
+  .modal input {
+    width: 100%; background: var(--bg3); color: var(--text);
+    border: 1px solid var(--border2); border-radius: 10px;
+    padding: 10px 14px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+    outline: none; margin-bottom: 12px;
+  }
+  .modal input:focus { border-color: var(--accent); }
+  .modal-note { font-size: 0.78rem; color: var(--muted); margin-top: 10px; }
+  .modal-note a { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="brand">Freelance<span>AI</span></div>
+  <div class="nav-links">
+    <a href="#agents">Agentlar</a>
+    <a href="#workspace">Ish joyi</a>
+    <a href="#history">Tarix</a>
+  </div>
+  <button class="nav-cta" onclick="showApiModal()">API Kalit</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge"><span class="dot"></span> 10+ AI Agent faol</div>
+  <h1>Freelance ishingizni<br><span class="grad">AI bilan avtomatlashtiring</span></h1>
+  <p>Buyurtma oling, agentni tanlang — AI bajaradi. SMM, Copywriting, Tarjima, Dizayn va ko'proq.</p>
+  <div class="hero-btns">
+    <button class="btn-primary" onclick="scrollToApp()">Hozir boshlash →</button>
+    <button class="btn-secondary" onclick="showApiModal()">API kalitni kiriting</button>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num">10+</div><div class="stat-label">AI Agent</div></div>
+  <div class="stat"><div class="stat-num">∞</div><div class="stat-label">So'rovlar</div></div>
+  <div class="stat"><div class="stat-num">5s</div><div class="stat-label">O'rtacha javob vaqti</div></div>
+  <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Bepul</div></div>
+</div>
+
+<!-- AGENTS SECTION -->
+<section class="app-section" id="agents">
+  <div class="section-label">Agentlar</div>
+  <div class="section-title">Qaysi agentni ishlatmoqchisiz?</div>
+  <div class="section-sub">Har bir agent o'z sohasida mutaxassis — birini tanlang va ishing tugaydi.</div>
+
+  <div class="agents-grid" id="agents-grid"></div>
+</section>
+
+<!-- WORKSPACE -->
+<section class="app-section" id="workspace" style="padding-top:0;">
+  <div class="section-label">Ish joyi</div>
+  <div class="section-title" id="workspace-title">SMM Agent</div>
+  <div class="section-sub" id="workspace-sub">Instagram, Telegram, Facebook uchun kontent yarating</div>
+
+  <div class="workspace">
+    <!-- INPUT PANEL -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-header-dot" style="background:#6c63ff"></div>
+        <div class="panel-title">Buyurtma</div>
+      </div>
+      <div class="panel-body">
+        <textarea class="input-box" id="user-input" placeholder="So'rovingizni yozing..."></textarea>
+
+        <div class="options-row">
+          <select class="lang-select" id="lang-select">
+            <option value="uz">🇺🇿 O'zbek</option>
+            <option value="ru">🇷🇺 Rus</option>
+            <option value="en">🇬🇧 Ingliz</option>
+            <option value="all">🌍 Hammasi</option>
+          </select>
+          <button class="tone-btn active" onclick="setTone(this,'professional')">Professional</button>
+          <button class="tone-btn" onclick="setTone(this,'friendly')">Do'stona</button>
+          <button class="tone-btn" onclick="setTone(this,'creative')">Ijodiy</button>
+        </div>
+
+        <button class="run-btn" id="run-btn" onclick="runAgent()">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 2l10 6-10 6V2z"/></svg>
+          Agentni ishga tushirish
+        </button>
+      </div>
+    </div>
+
+    <!-- OUTPUT PANEL -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-header-dot" style="background:#43e8a0"></div>
+        <div class="panel-title">Natija</div>
+      </div>
+      <div class="panel-body">
+        <div class="output-area" id="output-area">
+          <span class="output-placeholder">Agent natijasi bu yerda ko'rinadi...</span>
+        </div>
+        <div class="output-actions" id="output-actions" style="display:none;">
+          <button class="action-btn" onclick="copyResult()">📋 Nusxa olish</button>
+          <button class="action-btn" onclick="downloadResult()">⬇ Yuklab olish</button>
+          <button class="action-btn" onclick="clearResult()">🗑 Tozalash</button>
+          <button class="action-btn" onclick="regenerate()">🔄 Qayta yaratish</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HISTORY -->
+<section class="history-section" id="history">
+  <div class="section-label">So'nggi ishlar</div>
+  <div class="section-title">Tarix</div>
+  <div style="color:var(--muted);font-size:0.95rem;margin-bottom:1.5rem;">Bajarilgan barcha so'rovlar</div>
+  <div class="history-list" id="history-list">
+    <div style="color:var(--muted);font-size:0.88rem;">Hali hech narsa yo'q. Birinchi so'rovingizni yuboring!</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="brand">Freelance<span>AI</span></div>
+  <p>Claude API (Anthropic) tomonidan quvvatlanadi</p>
+  <p style="color:var(--muted);font-size:0.75rem;">Sizning kalit faqat brauzeringizda saqlanadi</p>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- API KEY MODAL -->
+<div class="modal-overlay" id="api-modal">
+  <div class="modal">
+    <h2>API Kalit kiriting</h2>
+    <p>Anthropic API kalitingizni kiriting. U faqat sizning brauzeringizda saqlanadi va hech qayerga yuborilmaydi.</p>
+    <input type="password" id="api-key-input" placeholder="sk-ant-..." />
+    <button class="btn-primary" style="width:100%" onclick="saveApiKey()">Saqlash va boshlash</button>
+    <div class="modal-note">
+      API kalitni <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> dan olishingiz mumkin.<br>
+      Bepul kredit bilan boshlash mumkin.
+    </div>
+  </div>
+</div>
+
+<script>
+const AGENTS = [
+  {
+    id:'smm', emoji:'📱', name:'SMM Agent', tag:'Kontent',
+    desc:'Instagram, Telegram, Facebook postlari, stories va kontent rejalari',
+    system:`Sen professional SMM mutaxassisisan. Ijtimoiy tarmoqlar uchun kontent yaratasin. Javobingda: post matni, emoji, hashtag va CTA (call-to-action) bo'lsin. Til: {lang}. Ohang: {tone}.`,
+    placeholder:'Masalan: Pitseria uchun Instagram post yozing, aktsiya haqida...'
+  },
+  {
+    id:'copy', emoji:'✍️', name:'Copywriter', tag:'Marketing',
+    desc:'Reklama matnlari, sloganlar, landing page kopiyasi',
+    system:`Sen tajribali marketing copywriterisan. Sotuvchi, ta'sirli va qiziqarli matnlar yozasin. Javobda: sarlavha, asosiy matn va CTA bo'lsin. Til: {lang}. Ohang: {tone}.`,
+    placeholder:'Masalan: Sport kiyim do'koni uchun reklama matni...'
+  },
+  {
+    id:'translate', emoji:'🌐', name:'Tarjimon', tag:'Til',
+    desc:"O'zbek, Rus, Ingliz, Arab va boshqa tillarga professional tarjima",
+    system:`Sen professional tarjimonsan. Matnni so'ralgan tilga aniq va tabiiy tarjima qilasan. Agar bir nechta til so'ralsa, har birini alohida ko'rsat. Til sozlamasi: {lang}. Tarjima sifati professional darajada bo'lsin.`,
+    placeholder:"Tarjima qilinishi kerak bo'lgan matnni yozing..."
+  },
+  {
+    id:'email', emoji:'📧', name:'Email Agent', tag:'Biznes',
+    desc:'Biznes xatlar, hamkorlik takliflari, follow-up emaillar',
+    system:`Sen biznes kommunikatsiya mutaxassisisan. Professional email va xatlar yozasin. Javobda: mavzu (subject), salomlashuv, asosiy matn va xulosa bo'lsin. Til: {lang}. Ohang: {tone}.`,
+    placeholder:'Masalan: Yangi mijozga hamkorlik taklifi uchun email...'
+  },
+  {
+    id:'design', emoji:'🎨', name:'Dizayn Brief', tag:'Kreativ',
+    desc:'Logo, banner, UI dizayn briefingi, rang sxemasi va konsepsiya',
+    system:`Sen ijodiy direktor va dizaynersan. Mijoz so'roviga asosida to'liq dizayn briefingi tayyorlaysan. Javobda: konsepsiya, rang sxemasi (hex kodlar bilan), tipografiya, kompozitsiya tavsiyalari, ilhom manbalari bo'lsin. Til: {lang}.`,
+    placeholder:'Masalan: Ekologik mahsulotlar brendi uchun logo kerak...'
+  },
+  {
+    id:'proposal', emoji:'📄', name:'Taklif Yozuvchi', tag:'Freelance',
+    desc:'Mijozlarga professional loyiha takliflari va narx tuzish',
+    system:`Sen tajribali freelancer va biznes konsultantsan. Mijozga yuborish uchun professional loyiha taklifi (proposal) yozasin. Javobda: muammo tahlili, yechim, ish bosqichlari, vaqt jadvali, narx (taxminiy) va keyingi qadamlar bo'lsin. Til: {lang}. Ohang: {tone}.`,
+    placeholder:'Masalan: Website yaratish uchun mijozga taklif...'
+  },
+  {
+    id:'seo', emoji:'🔍', name:'SEO Agent', tag:'Digital',
+    desc:"Maqolalar, meta tavsiflar, kalit so'zlar va SEO optimizatsiya",
+    system:`Sen SEO mutaxassisi va kontent yozuvchisan. SEO optimallashtirilgan matn yozasin. Javobda: sarlavha (H1), meta tavsif, asosiy kalit so'zlar, maqola strukturasi va to'liq matn bo'lsin. Til: {lang}.`,
+    placeholder:'Masalan: "Toshkentda tortlar" mavzusida SEO maqola...'
+  },
+  {
+    id:'script', emoji:'🎬', name:'Video Skript', tag:'Video',
+    desc:'YouTube, Reels, TikTok uchun video skriptlar va ssenariylar',
+    system:`Sen professional video kontent yaratuvchisan. Qiziqarli va engagement ko'p bo'ladigan video skript yozasin. Javobda: hook (dastlabki 3 soniya), asosiy qism, CTA va umumiy vaqt ko'rsatilsin. Til: {lang}. Ohang: {tone}.`,
+    placeholder:'Masalan: Ovqat restorani uchun 60 soniyalik Reels skripti...'
+  },
+  {
+    id:'chat', emoji:'💬', name:'Chatbot Javoblari', tag:'Support',
+    desc:"Mijozlar uchun chatbot skriptlari, FAQ va qo'llab-quvvatlash matnlari",
+    system:`Sen mijozlar xizmati mutaxassisisan. Professional va do'stona chatbot javoblari, FAQ va support skriptlar yozasin. Javoblar aniq, qisqa va foydali bo'lsin. Til: {lang}. Ohang: {tone}.`,
+    placeholder:'Masalan: Online do\'kon uchun qaytarish siyosati javoblari...'
+  },
+  {
+    id:'resume', emoji:'📋', name:'CV / Rezyume', tag:'Karera',
+    desc:'Professional CV, cover letter va LinkedIn profil matnlari',
+    system:`Sen HR va karera konsultantisan. Professional CV, rezyume va cover letter yozasin. Javobda: kasbiy profil xulosa, ko'nikmalar, ish tajribasi tavsifi va cover letter bo'lsin. Til: {lang}. Ohang: {tone}.`,
+    placeholder:"Masalan: Grafik dizayner uchun CV va cover letter yoz..."
+  }
+];
+
+let currentAgent = AGENTS[0];
+let currentTone = 'professional';
+let history = JSON.parse(localStorage.getItem('fai_history') || '[]');
+
+function init() {
+  renderAgents();
+  renderHistory();
+  if (!localStorage.getItem('fai_key')) {
+    document.getElementById('api-modal').style.display = 'flex';
+  } else {
+    document.getElementById('api-modal').style.display = 'none';
+  }
+}
+
+function renderAgents() {
+  const grid = document.getElementById('agents-grid');
+  grid.innerHTML = AGENTS.map((a,i) => `
+    <div class="agent-card ${i===0?'active':''}" onclick="selectAgent(${i})" id="agent-${a.id}">
+      <div class="agent-emoji">${a.emoji}</div>
+      <div class="agent-name">${a.name}</div>
+      <div class="agent-desc">${a.desc}</div>
+      <div class="agent-tag">${a.tag}</div>
+    </div>
+  `).join('');
+}
+
+function selectAgent(i) {
+  currentAgent = AGENTS[i];
+  document.querySelectorAll('.agent-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('agent-' + currentAgent.id).classList.add('active');
+  document.getElementById('workspace-title').textContent = currentAgent.name;
+  document.getElementById('workspace-sub').textContent = currentAgent.desc;
+  document.getElementById('user-input').placeholder = currentAgent.placeholder;
+  clearResult();
+  document.getElementById('workspace').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function setTone(btn, tone) {
+  document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentTone = tone;
+}
+
+const toneMap = { professional: 'professional va rasmiy', friendly: "do'stona va samimiy", creative: 'ijodiy va original' };
+const langMap = { uz: "O'zbek tilida", ru: 'Rus tilida', en: 'Ingliz tilida', all: "O'zbek, Rus va Ingliz tillarida (har birini alohida ko'rsat)" };
+
+async function runAgent() {
+  const key = localStorage.getItem('fai_key');
+  if (!key) { showApiModal(); return; }
+
+  const input = document.getElementById('user-input').value.trim();
+  if (!input) { showToast('So\'rovingizni yozing!'); return; }
+
+  const lang = document.getElementById('lang-select').value;
+  const systemPrompt = currentAgent.system
+    .replace('{lang}', langMap[lang] || langMap.uz)
+    .replace('{tone}', toneMap[currentTone] || toneMap.professional);
+
+  const btn = document.getElementById('run-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div> Ishlamoqda...';
+
+  const outputArea = document.getElementById('output-area');
+  outputArea.innerHTML = '<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+  document.getElementById('output-actions').style.display = 'none';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1500,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: input }]
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error?.message || 'API xatolik');
+    }
+
+    const data = await res.json();
+    const text = data.content?.map(i => i.text || '').join('') || 'Xatolik yuz berdi.';
+
+    outputArea.textContent = text;
+    document.getElementById('output-actions').style.display = 'flex';
+
+    // Save to history
+    const entry = { agent: currentAgent.name, emoji: currentAgent.emoji, query: input, result: text, time: new Date().toLocaleTimeString('uz-UZ', {hour:'2-digit',minute:'2-digit'}) };
+    history.unshift(entry);
+    if (history.length > 20) history.pop();
+    localStorage.setItem('fai_history', JSON.stringify(history));
+    renderHistory();
+    showToast('✓ Tayyor!');
+
+  } catch(e) {
+    outputArea.textContent = '❌ Xatolik: ' + e.message + '\n\nAPI kalitingizni tekshiring va qayta urinib ko\'ring.';
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 2l10 6-10 6V2z"/></svg> Agentni ishga tushirish';
+}
+
+function renderHistory() {
+  const list = document.getElementById('history-list');
+  if (!history.length) {
+    list.innerHTML = '<div style="color:var(--muted);font-size:0.88rem;">Hali hech narsa yo\'q. Birinchi so\'rovingizni yuboring!</div>';
+    return;
+  }
+  const colors = ['#6c63ff','#ff6584','#43e8a0','#f59e0b','#3b82f6','#ec4899'];
+  list.innerHTML = history.map((h,i) => `
+    <div class="history-item">
+      <div class="history-item-left">
+        <div class="history-agent-badge" style="background:${colors[i%colors.length]}22;color:${colors[i%colors.length]}">${h.emoji} ${h.agent}</div>
+        <div class="history-query">${h.query}</div>
+        <div class="history-preview">${h.result.substring(0,100)}...</div>
+      </div>
+      <div class="history-time">${h.time}</div>
+    </div>
+  `).join('');
+}
+
+function copyResult() {
+  const text = document.getElementById('output-area').textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('📋 Nusxa olindi!'));
+}
+
+function downloadResult() {
+  const text = document.getElementById('output-area').textContent;
+  const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = currentAgent.id + '_natija.txt';
+  a.click();
+  showToast('⬇ Yuklab olindi!');
+}
+
+function clearResult() {
+  document.getElementById('output-area').innerHTML = '<span class="output-placeholder">Agent natijasi bu yerda ko\'rinadi...</span>';
+  document.getElementById('output-actions').style.display = 'none';
+}
+
+function regenerate() {
+  runAgent();
+}
+
+function showApiModal() {
+  document.getElementById('api-modal').style.display = 'flex';
+  document.getElementById('api-key-input').value = localStorage.getItem('fai_key') || '';
+}
+
+function saveApiKey() {
+  const key = document.getElementById('api-key-input').value.trim();
+  if (!key.startsWith('sk-')) { showToast('❌ Noto\'g\'ri kalit formati'); return; }
+  localStorage.setItem('fai_key', key);
+  document.getElementById('api-modal').style.display = 'none';
+  showToast('✓ API kalit saqlandi!');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function scrollToApp() {
+  document.getElementById('agents').scrollIntoView({behavior:'smooth'});
+}
+
+document.getElementById('api-modal').addEventListener('click', function(e) {
+  if (e.target === this && localStorage.getItem('fai_key')) this.style.display = 'none';
+});
+
+document.getElementById('user-input').addEventListener('keydown', function(e) {
+  if (e.ctrlKey && e.key === 'Enter') runAgent();
+});
+
+init();
+</script>
+</body>
+</html>
